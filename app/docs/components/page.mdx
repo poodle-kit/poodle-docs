@@ -1,0 +1,94 @@
+# Components
+
+Explore Poodle's collection of beautiful, accessible React components.
+
+## Overview
+
+Poodle provides a comprehensive set of components to build modern web applications. All components are:
+
+- ✅ **Fully typed** with TypeScript
+- ✅ **Accessible** following WAI-ARIA guidelines
+- ✅ **Customizable** with Tailwind CSS
+- ✅ **Responsive** out of the box
+
+## Component Categories
+
+### Form Components
+
+Interactive components for building forms and collecting user input:
+
+- [Button](/docs/components/button) - Clickable buttons with multiple variants
+- [Input](/docs/components/input) - Text input fields with validation
+
+### Layout Components
+
+Components for structuring and organizing content:
+
+- [Card](/docs/components/card) - Container for grouping related content
+- [Modal](/docs/components/modal) - Overlay dialogs for focused interactions
+
+## Getting Started
+
+To use any component, simply import it from the `poodle` package:
+
+```tsx
+import { Button, Input, Card } from 'poodle'
+
+export default function MyComponent() {
+  return (
+    <Card>
+      <Input placeholder="Enter text" />
+      <Button>Submit</Button>
+    </Card>
+  )
+}
+```
+
+## Common Patterns
+
+### Form Components Together
+
+```tsx
+import { Button, Input, Card } from 'poodle'
+import { useState } from 'react'
+
+export default function ContactForm() {
+  const [email, setEmail] = useState('')
+
+  return (
+    <Card className="max-w-md">
+      <h2 className="text-xl font-bold mb-4">Contact Us</h2>
+      <Input
+        type="email"
+        placeholder="Your email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="mb-4"
+      />
+      <Button variant="primary">Send</Button>
+    </Card>
+  )
+}
+```
+
+## Component Props
+
+All Poodle components accept:
+
+- **className** - Additional CSS classes
+- **style** - Inline styles object
+- **children** - Child elements
+- Component-specific props (see individual docs)
+
+## Best Practices
+
+1. **Accessibility First** - Always provide labels for form inputs
+2. **Semantic HTML** - Use the right component for the job
+3. **Responsive Design** - Test on different screen sizes
+4. **Performance** - Import only components you need
+
+## Need Help?
+
+- Check the individual component pages for detailed documentation
+- Join our [Discord community](https://discord.gg/poodle)
+- Report issues on [GitHub](https://github.com/poodle-kit/poodle/issues)

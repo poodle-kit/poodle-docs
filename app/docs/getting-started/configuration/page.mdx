@@ -1,0 +1,241 @@
+# Configuration
+
+Learn how to customize Poodle to match your design system.
+
+## Theme Customization
+
+Poodle uses CSS variables for theming, making it easy to customize colors, spacing, and more.
+
+### Custom Colors
+
+Override Poodle's default colors by defining CSS variables:
+
+```css
+/* app/globals.css */
+:root {
+  --poodle-primary: 59 130 246; /* Blue */
+  --poodle-secondary: 139 92 246; /* Purple */
+  --poodle-success: 34 197 94; /* Green */
+  --poodle-danger: 239 68 68; /* Red */
+  --poodle-warning: 251 191 36; /* Yellow */
+}
+```
+
+### Dark Mode
+
+Poodle automatically supports dark mode:
+
+```css
+/* app/globals.css */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --poodle-bg: 10 10 10;
+    --poodle-text: 255 255 255;
+  }
+}
+```
+
+### Custom Fonts
+
+```css
+/* app/globals.css */
+:root {
+  --poodle-font-sans: 'Inter', system-ui, sans-serif;
+  --poodle-font-mono: 'Fira Code', monospace;
+}
+```
+
+## Tailwind Integration
+
+If you're using Tailwind CSS, you can extend Poodle's styles:
+
+```js
+// tailwind.config.js
+module.exports = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx}',
+    './node_modules/poodle/dist/**/*.js'
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          // ... more shades
+          900: '#1e3a8a'
+        }
+      }
+    }
+  }
+}
+```
+
+## TypeScript Configuration
+
+Poodle is built with TypeScript and exports all types:
+
+```tsx
+import type { ButtonProps, InputProps, CardProps } from 'poodle'
+
+// Use Poodle types in your components
+interface CustomButtonProps extends ButtonProps {
+  icon?: React.ReactNode
+}
+
+function CustomButton({ icon, children, ...props }: CustomButtonProps) {
+  return (
+    <Button {...props}>
+      {icon}
+      {children}
+    </Button>
+  )
+}
+```
+
+## Global Configuration
+
+Create a Poodle provider to configure global settings:
+
+```tsx
+// app/providers.tsx
+'use client'
+
+import { PoodleProvider } from 'poodle'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <PoodleProvider
+      theme={{
+        primaryColor: 'blue',
+        borderRadius: 'md',
+        fontFamily: 'inter'
+      }}
+    >
+      {children}
+    </PoodleProvider>
+  )
+}
+```
+
+Then wrap your app:
+
+```tsx
+// app/layout.tsx
+import { Providers } from './providers'
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+## Component-Level Customization
+
+Override styles for individual components:
+
+```tsx
+import { Button } from 'poodle'
+
+export default function CustomButton() {
+  return (
+    <Button
+      className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+    >
+      Gradient Button
+    </Button>
+  )
+}
+```
+
+## Environment Variables
+
+Configure Poodle behavior with environment variables:
+
+```bash
+# .env.local
+NEXT_PUBLIC_POODLE_CDN=https://cdn.poodle.dev
+NEXT_PUBLIC_POODLE_THEME=light
+```
+
+## Bundle Size Optimization
+
+### Tree Shaking
+
+Import only the components you need:
+
+```tsx
+// ✅ Good - Tree shakeable
+import { Button } from 'poodle'
+
+// ❌ Avoid - Imports everything
+import * as Poodle from 'poodle'
+```
+
+### Code Splitting
+
+Use dynamic imports for large components:
+
+```tsx
+import dynamic from 'next/dynamic'
+
+const Modal = dynamic(() => import('poodle').then(mod => ({ default: mod.Modal })))
+
+export default function Page() {
+  return <Modal>Content</Modal>
+}
+```
+
+## Troubleshooting
+
+### Styles Not Loading
+
+Make sure you've imported the CSS file:
+
+```tsx
+import 'poodle/dist/style.css'
+```
+
+### TypeScript Errors
+
+Ensure you have the correct types installed:
+
+```bash
+npm install --save-dev @types/react @types/react-dom
+```
+
+### Build Errors
+
+If you encounter build errors, try clearing your cache:
+
+```bash
+rm -rf .next
+npm run build
+```
+
+### SSR Issues
+
+For Server-Side Rendering issues, mark components as client-side:
+
+```tsx
+'use client'
+
+import { Button } from 'poodle'
+```
+
+## Performance Tips
+
+1. **Memoize callbacks**: Use `useCallback` for event handlers
+2. **Lazy load**: Use dynamic imports for heavy components
+3. **Optimize images**: Use Next.js Image component
+4. **Reduce bundle size**: Import only needed components
+
+## Next Steps
+
+- [Components](/docs/components) - Explore all components
+- [Examples](/docs/examples) - See real-world examples

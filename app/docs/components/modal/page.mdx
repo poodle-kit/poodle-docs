@@ -1,0 +1,337 @@
+import { Demo } from '@/components/Demo'
+import { PropsTable } from '@/components/PropsTable'
+
+# Modal
+
+Overlay dialog component for focused user interactions.
+
+## Import
+
+```tsx
+import { Modal } from 'poodle'
+```
+
+## Usage
+
+### Basic Modal
+
+<Demo>
+  <div>
+    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Open Modal
+    </button>
+  </div>
+</Demo>
+
+```tsx
+function BasicModal() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Modal</Button>
+
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header>
+          <h2>Modal Title</h2>
+        </Modal.Header>
+        <Modal.Body>
+          <p>This is the modal content.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => setOpen(false)}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  )
+}
+```
+
+### Confirmation Modal
+
+<Demo>
+  <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+    Delete Item
+  </button>
+</Demo>
+
+```tsx
+function ConfirmModal() {
+  const [open, setOpen] = useState(false)
+
+  const handleDelete = () => {
+    // Perform delete action
+    setOpen(false)
+  }
+
+  return (
+    <>
+      <Button variant="danger" onClick={() => setOpen(true)}>
+        Delete Item
+      </Button>
+
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal.Header>
+          <h2>Confirm Deletion</h2>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  )
+}
+```
+
+### Form Modal
+
+<Demo>
+  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    Add User
+  </button>
+</Demo>
+
+```tsx
+function FormModal() {
+  const [open, setOpen] = useState(false)
+  const [formData, setFormData] = useState({ name: '', email: '' })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Handle form submission
+    setOpen(false)
+  }
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Add User</Button>
+
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <form onSubmit={handleSubmit}>
+          <Modal.Header>
+            <h2>Add New User</h2>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="space-y-4">
+              <Input
+                label="Name"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                required
+              />
+              <Input
+                type="email"
+                label="Email"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                required
+              />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline" type="button" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">
+              Add User
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+    </>
+  )
+}
+```
+
+### Modal Sizes
+
+```tsx
+// Small Modal
+<Modal size="sm" open={open} onClose={onClose}>
+  {/* content */}
+</Modal>
+
+// Medium Modal (default)
+<Modal size="md" open={open} onClose={onClose}>
+  {/* content */}
+</Modal>
+
+// Large Modal
+<Modal size="lg" open={open} onClose={onClose}>
+  {/* content */}
+</Modal>
+
+// Full Screen Modal
+<Modal size="full" open={open} onClose={onClose}>
+  {/* content */}
+</Modal>
+```
+
+## API Reference
+
+<PropsTable
+  data={[
+    {
+      prop: 'open',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the modal is visible'
+    },
+    {
+      prop: 'onClose',
+      type: '() => void',
+      default: 'undefined',
+      description: 'Callback when modal should close'
+    },
+    {
+      prop: 'size',
+      type: "'sm' | 'md' | 'lg' | 'full'",
+      default: "'md'",
+      description: 'Modal size'
+    },
+    {
+      prop: 'closeOnOverlayClick',
+      type: 'boolean',
+      default: 'true',
+      description: 'Close modal when clicking overlay'
+    },
+    {
+      prop: 'closeOnEscape',
+      type: 'boolean',
+      default: 'true',
+      description: 'Close modal when pressing Escape'
+    },
+    {
+      prop: 'children',
+      type: 'ReactNode',
+      default: 'undefined',
+      description: 'Modal content'
+    }
+  ]}
+/>
+
+## Examples
+
+### Alert Modal
+
+```tsx
+function AlertModal({ message }: { message: string }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Modal open={open} onClose={() => setOpen(false)} size="sm">
+      <Modal.Body>
+        <div className="text-center py-4">
+          <div className="text-4xl mb-4">⚠️</div>
+          <p className="text-lg">{message}</p>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={() => setOpen(false)} className="w-full">
+          OK
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
+}
+```
+
+### Loading Modal
+
+```tsx
+function LoadingModal() {
+  const [loading, setLoading] = useState(false)
+
+  return (
+    <Modal open={loading} closeOnOverlayClick={false} closeOnEscape={false}>
+      <Modal.Body>
+        <div className="text-center py-8">
+          <Spinner size="lg" />
+          <p className="mt-4">Loading...</p>
+        </div>
+      </Modal.Body>
+    </Modal>
+  )
+}
+```
+
+### Multi-step Modal
+
+```tsx
+function MultiStepModal() {
+  const [open, setOpen] = useState(false)
+  const [step, setStep] = useState(1)
+
+  return (
+    <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal.Header>
+        <h2>Step {step} of 3</h2>
+      </Modal.Header>
+      <Modal.Body>
+        {step === 1 && <Step1Content />}
+        {step === 2 && <Step2Content />}
+        {step === 3 && <Step3Content />}
+      </Modal.Body>
+      <Modal.Footer>
+        {step > 1 && (
+          <Button variant="outline" onClick={() => setStep(step - 1)}>
+            Back
+          </Button>
+        )}
+        {step < 3 ? (
+          <Button onClick={() => setStep(step + 1)}>
+            Next
+          </Button>
+        ) : (
+          <Button onClick={() => setOpen(false)}>
+            Finish
+          </Button>
+        )}
+      </Modal.Footer>
+    </Modal>
+  )
+}
+```
+
+## Accessibility
+
+- Traps focus within modal
+- Closes on Escape key (configurable)
+- Prevents body scroll when open
+- ARIA attributes for screen readers
+- Focus returns to trigger element on close
+
+## Best Practices
+
+### Do ✅
+
+- Use modals for important actions requiring attention
+- Keep modal content focused and concise
+- Provide clear close/cancel options
+- Use appropriate modal sizes
+
+### Don't ❌
+
+- Don't nest modals
+- Don't use modals for non-critical information
+- Don't make modals too complex
+- Don't forget keyboard accessibility
+
+## Related Components
+
+- [Button](/docs/components/button) - Modal triggers and actions
+- [Card](/docs/components/card) - Content containers
+- [Input](/docs/components/input) - Form inputs in modals

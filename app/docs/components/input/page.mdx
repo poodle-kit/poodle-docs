@@ -1,0 +1,339 @@
+import { Demo } from '@/components/Demo'
+import { PropsTable } from '@/components/PropsTable'
+
+# Input
+
+Text input component for collecting user input with various types and states.
+
+## Import
+
+```tsx
+import { Input } from 'poodle'
+```
+
+## Usage
+
+### Basic Input
+
+<Demo>
+  <input
+    type="text"
+    placeholder="Enter text..."
+    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</Demo>
+
+```tsx
+<Input placeholder="Enter text..." />
+```
+
+### Input Types
+
+<Demo>
+  <div className="space-y-3">
+    <input
+      type="text"
+      placeholder="Text input"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <input
+      type="email"
+      placeholder="Email input"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <input
+      type="password"
+      placeholder="Password input"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <input
+      type="number"
+      placeholder="Number input"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+</Demo>
+
+```tsx
+<Input type="text" placeholder="Text input" />
+<Input type="email" placeholder="Email input" />
+<Input type="password" placeholder="Password input" />
+<Input type="number" placeholder="Number input" />
+```
+
+### Sizes
+
+<Demo>
+  <div className="space-y-3">
+    <input
+      type="text"
+      placeholder="Small"
+      className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <input
+      type="text"
+      placeholder="Medium (default)"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <input
+      type="text"
+      placeholder="Large"
+      className="w-full px-5 py-3 text-lg border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+</Demo>
+
+```tsx
+<Input size="sm" placeholder="Small" />
+<Input size="md" placeholder="Medium" />
+<Input size="lg" placeholder="Large" />
+```
+
+### States
+
+<Demo>
+  <div className="space-y-3">
+    <input
+      type="text"
+      placeholder="Default"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <input
+      type="text"
+      placeholder="Disabled"
+      disabled
+      className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
+    />
+    <input
+      type="text"
+      placeholder="Error"
+      className="w-full px-4 py-2 border-2 border-red-500 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+    />
+    <input
+      type="text"
+      value="Success"
+      readOnly
+      className="w-full px-4 py-2 border-2 border-green-500 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+    />
+  </div>
+</Demo>
+
+```tsx
+<Input placeholder="Default" />
+<Input placeholder="Disabled" disabled />
+<Input placeholder="Error" error />
+<Input value="Success" success readOnly />
+```
+
+### With Label
+
+<Demo>
+  <div>
+    <label className="block text-sm font-medium mb-2">Email Address</label>
+    <input
+      type="email"
+      placeholder="you@example.com"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+</Demo>
+
+```tsx
+<label htmlFor="email">Email Address</label>
+<Input id="email" type="email" placeholder="you@example.com" />
+```
+
+### With Helper Text
+
+<Demo>
+  <div>
+    <input
+      type="password"
+      placeholder="Enter password"
+      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <p className="mt-1 text-sm text-gray-500">Must be at least 8 characters</p>
+  </div>
+</Demo>
+
+```tsx
+<Input type="password" placeholder="Enter password" />
+<span className="text-sm text-gray-500">
+  Must be at least 8 characters
+</span>
+```
+
+### With Error Message
+
+<Demo>
+  <div>
+    <input
+      type="email"
+      placeholder="Email"
+      className="w-full px-4 py-2 border-2 border-red-500 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+    />
+    <p className="mt-1 text-sm text-red-600">Please enter a valid email</p>
+  </div>
+</Demo>
+
+```tsx
+<Input type="email" placeholder="Email" error />
+<span className="text-sm text-red-600">
+  Please enter a valid email
+</span>
+```
+
+## API Reference
+
+<PropsTable
+  data={[
+    {
+      prop: 'type',
+      type: "'text' | 'email' | 'password' | 'number' | ...",
+      default: "'text'",
+      description: 'HTML input type'
+    },
+    {
+      prop: 'placeholder',
+      type: 'string',
+      default: 'undefined',
+      description: 'Placeholder text'
+    },
+    {
+      prop: 'value',
+      type: 'string',
+      default: 'undefined',
+      description: 'Controlled input value'
+    },
+    {
+      prop: 'onChange',
+      type: '(event: ChangeEvent) => void',
+      default: 'undefined',
+      description: 'Change event handler'
+    },
+    {
+      prop: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether input is disabled'
+    },
+    {
+      prop: 'required',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether input is required'
+    },
+    {
+      prop: 'error',
+      type: 'boolean',
+      default: 'false',
+      description: 'Show error state'
+    },
+    {
+      prop: 'size',
+      type: "'sm' | 'md' | 'lg'",
+      default: "'md'",
+      description: 'Input size'
+    }
+  ]}
+/>
+
+## Examples
+
+### Controlled Input
+
+```tsx
+function ControlledInput() {
+  const [value, setValue] = useState('')
+
+  return (
+    <Input
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder="Type here..."
+    />
+  )
+}
+```
+
+### Form Validation
+
+```tsx
+function ValidatedInput() {
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+
+  const validate = (value: string) => {
+    if (!value.includes('@')) {
+      setError('Invalid email')
+    } else {
+      setError('')
+    }
+  }
+
+  return (
+    <div>
+      <Input
+        type="email"
+        value={email}
+        onChange={(e) => {
+          setEmail(e.target.value)
+          validate(e.target.value)
+        }}
+        error={!!error}
+      />
+      {error && <span className="text-red-600">{error}</span>}
+    </div>
+  )
+}
+```
+
+### Search Input
+
+```tsx
+function SearchInput() {
+  const [query, setQuery] = useState('')
+
+  return (
+    <div className="relative">
+      <Input
+        type="search"
+        placeholder="Search..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <SearchIcon className="absolute right-3 top-1/2 -translate-y-1/2" />
+    </div>
+  )
+}
+```
+
+## Accessibility
+
+- Semantic `<input>` element
+- Keyboard accessible
+- ARIA attributes for states
+- Label association
+- Focus indicators
+
+## Best Practices
+
+### Do ✅
+
+- Always provide labels for inputs
+- Use appropriate input types
+- Provide clear placeholder text
+- Show validation feedback
+- Use proper autocomplete attributes
+
+### Don't ❌
+
+- Don't use placeholder as label
+- Don't make required fields unclear
+- Don't hide password requirements
+- Don't disable copy/paste in password fields
+
+## Related Components
+
+- [Button](/docs/components/button) - Form submit buttons
+- [Card](/docs/components/card) - Form containers

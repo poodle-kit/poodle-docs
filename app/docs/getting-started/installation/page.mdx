@@ -1,0 +1,125 @@
+# Installation
+
+Learn how to install Poodle in your React project.
+
+## Package Manager
+
+Choose your preferred package manager to install Poodle:
+
+### npm
+
+```bash
+npm install poodle
+```
+
+### pnpm
+
+```bash
+pnpm add poodle
+```
+
+### yarn
+
+```bash
+yarn add poodle
+```
+
+## Import Styles
+
+After installation, import Poodle's CSS in your main application file:
+
+```tsx
+// app/layout.tsx or src/main.tsx
+import 'poodle/dist/style.css'
+```
+
+### Next.js App Router
+
+If you're using Next.js with the App Router:
+
+```tsx
+// app/layout.tsx
+import 'poodle/dist/style.css'
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+### Next.js Pages Router
+
+If you're using Next.js with the Pages Router:
+
+```tsx
+// pages/_app.tsx
+import 'poodle/dist/style.css'
+import type { AppProps } from 'next/app'
+
+export default function App({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />
+}
+```
+
+### Vite
+
+If you're using Vite:
+
+```tsx
+// src/main.tsx
+import 'poodle/dist/style.css'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+```
+
+### Create React App
+
+If you're using Create React App:
+
+```tsx
+// src/index.tsx
+import 'poodle/dist/style.css'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+
+const root = ReactDOM.createRoot(document.getElementById('root')!)
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+```
+
+## Verify Installation
+
+To verify that Poodle is installed correctly, try importing a component:
+
+```tsx
+import { Button } from 'poodle'
+
+function App() {
+  return <Button>Hello Poodle!</Button>
+}
+```
+
+If you see a button rendered on your page, you're all set! 🎉
+
+## Next Steps
+
+- [Quick Start Guide](/docs/getting-started/quick-start) - Build your first app with Poodle
+- [Configuration](/docs/getting-started/configuration) - Customize Poodle's theme
