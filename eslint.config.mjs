@@ -37,8 +37,6 @@ const eslintConfig = defineConfig([
       "react/prop-types": "off",
       // TSX 내 특수문자 사용 경고 해제
       "react/no-unescaped-entities": "off",
-
-     
       // 재할당 가능한 변수는 let 대신 const 사용
       "prefer-const": "error",
       "no-var": "error",

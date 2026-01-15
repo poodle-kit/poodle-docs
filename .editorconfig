@@ -1,0 +1,17 @@
+# EditorConfig is awesome: https://EditorConfig.org
+# 에디터 레벨에서 파일 기본 규칙을 통일합니다.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf #유닉스 스타일 줄바꿈
+indent_style = space #탭 대신 스페이스 사용
+indent_size = 2 # 인덴트 크기 2
+insert_final_newline = true # 파일 마지막에 개행 추가
+trim_trailing_whitespace = true # 라인 끝 불필요한 공백 제거
+
+[*.md]
+trim_trailing_whitespace = false #마크다운 파일에서는 라인 끝 공백 제거 안함
+
+[*.{yml,yaml}]
+indent_size = 2
