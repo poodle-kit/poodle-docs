@@ -1,0 +1,360 @@
+# 색상 시스템
+
+Poodle UI는 접근성과 일관성을 보장하는 체계적인 색상 시스템을 제공해요.
+
+## DEFAULT + foreground 패턴
+
+Poodle의 색상 시스템은 **DEFAULT + foreground 쌍** 구조를 사용해요.
+
+```typescript
+colors: {
+  primary: {
+    DEFAULT: '#10b981',      // 배경색
+    foreground: '#ffffff',   // 텍스트색 (충분한 대비 보장)
+  }
+}
+```
+
+### 왜 이 패턴을 사용하나요?
+
+#### ♿ 접근성 자동 보장
+
+```tsx
+<Button className="bg-primary text-primary-foreground">
+  클릭하세요
+</Button>
+```
+
+- `bg-primary` → 배경색 (DEFAULT)
+- `text-primary-foreground` → 텍스트색 (foreground)
+- **WCAG 색상 대비 기준 자동 만족** (4.5:1 이상)
+
+#### 🌓 Light/Dark 모드 자동 대응
+
+```typescript
+// Light 모드
+primary: {
+  DEFAULT: '#10b981',  // 어두운 초록
+  foreground: '#ffffff',  // 흰색
+}
+
+// Dark 모드
+primary: {
+  DEFAULT: '#34d399',  // 밝은 초록
+  foreground: '#000000',  // 검은색 (자동 전환!)
+}
+```
+
+동일한 클래스명 `bg-primary text-primary-foreground`로 테마 전환 시 자동 대응되어요.
+
+## 색상 카테고리
+
+### 1️⃣ Page & Container (페이지 레이아웃)
+
+| 토큰 | 역할 | 사용 예시 |
+|------|------|----------|
+| `background` | 페이지 전체 배경 | `bg-background text-foreground` |
+| `foreground` | 페이지 전체 텍스트 | `text-foreground` |
+| `muted` | 비활성/희미한 배경 | `bg-muted text-muted-foreground` |
+| `accent` | Hover 강조 배경 | `hover:bg-accent hover:text-accent-foreground` |
+| `card` | 카드 배경 | `bg-card text-card-foreground` |
+| `popover` | 팝오버/드롭다운 배경 | `bg-popover text-popover-foreground` |
+
+```tsx
+// 사용 예시
+<div className="bg-background text-foreground">
+  <Card className="bg-card text-card-foreground">
+    <p className="text-muted-foreground">희미한 텍스트</p>
+  </Card>
+</div>
+```
+
+### 2️⃣ Brand & Action (브랜드/액션 색상)
+
+| 토큰 | 역할 | 사용 예시 |
+|------|------|----------|
+| `primary` | 주요 액션 (Submit, CTA) | `bg-primary text-primary-foreground` |
+| `secondary` | 보조 액션 (Cancel) | `bg-secondary text-secondary-foreground` |
+
+```tsx
+<Button variant="default">  {/* bg-primary */}
+  제출
+</Button>
+
+<Button variant="secondary">  {/* bg-secondary */}
+  취소
+</Button>
+```
+
+### 3️⃣ Semantic (의미 기반 색상)
+
+| 토큰 | 의미 | 사용 예시 |
+|------|------|----------|
+| `info` | 정보성 메시지 | `bg-info text-info-foreground` |
+| `danger` | 위험/에러/삭제 | `bg-danger text-danger-foreground` |
+| `warning` | 경고 | `bg-warning text-warning-foreground` |
+| `success` | 성공/완료 | `bg-success text-success-foreground` |
+
+```tsx
+<Button variant="danger">계정 삭제</Button>
+<Alert variant="warning">주의가 필요해요</Alert>
+<Message variant="success">저장되었어요</Message>
+```
+
+### 4️⃣ Border & Input (테두리/입력)
+
+| 토큰 | 역할 | 사용 예시 |
+|------|------|----------|
+| `border` | 기본 테두리 | `border border-border` |
+| `input` | Input 테두리 | `border-input` |
+| `ring` | Focus ring (접근성) | `focus:ring-ring` |
+
+```tsx
+<Input className="border-input focus:ring-ring" />
+<Card className="border border-border" />
+```
+
+## 색상 정의하기
+
+### 단일 색상 값
+
+간단한 색상은 문자열로 정의할 수 있어요.
+
+```typescript
+import { defineTheme } from '@poodle-kit/ui/theme';
+
+export const myTheme = defineTheme({
+  colors: {
+    border: '#e5e7eb',  // 단일 값
+    input: '#e5e7eb',
+    ring: '#3b82f6',
+  }
+});
+```
+
+### DEFAULT + foreground 쌍
+
+컴포넌트 배경색은 쌍으로 정의하면 되어요.
+
+```typescript
+export const myTheme = defineTheme({
+  colors: {
+    primary: {
+      DEFAULT: '#10b981',      // 배경
+      foreground: '#ffffff',   // 텍스트
+    },
+    background: {
+      DEFAULT: '#ffffff',
+      foreground: '#000000',
+    },
+  }
+});
+```
+
+## 색상 형식
+
+Poodle UI는 다양한 색상 형식을 지원해요.
+
+### HEX
+
+```typescript
+colors: {
+  primary: {
+    DEFAULT: '#10b981',
+    foreground: '#ffffff',
+  }
+}
+```
+
+### RGB/RGBA
+
+```typescript
+colors: {
+  primary: {
+    DEFAULT: 'rgb(16, 185, 129)',
+    foreground: 'rgba(255, 255, 255, 1)',
+  }
+}
+```
+
+### OKLCH (추천)
+
+더 정확한 색상 표현과 부드러운 그라데이션을 위해 OKLCH를 사용할 수 있어요.
+
+```typescript
+colors: {
+  primary: {
+    DEFAULT: 'oklch(0.68 0.19 162)',
+    foreground: 'oklch(0.98 0 0)',
+  }
+}
+```
+
+**OKLCH 장점:**
+- 🎨 인간의 시각과 일치하는 균일한 색상 분포
+- 🌈 더 자연스러운 그라데이션
+- 💡 lightness 값으로 명도 제어가 용이해요
+
+### CSS 변수 참조
+
+기존 CSS 변수를 참조할 수도 있어요.
+
+```css
+/* globals.css */
+:root {
+  --brand-green: #10b981;
+}
+```
+
+```typescript
+colors: {
+  primary: {
+    DEFAULT: 'var(--brand-green)',
+    foreground: '#ffffff',
+  }
+}
+```
+
+## 전체 색상 토큰 예시
+
+```typescript
+import { defineTheme } from '@poodle-kit/ui/theme';
+
+export const myLightTheme = defineTheme({
+  colors: {
+    // Page & Container
+    background: {
+      DEFAULT: '#ffffff',
+      foreground: '#000000',
+    },
+    foreground: '#000000',
+    muted: {
+      DEFAULT: '#f5f5f5',
+      foreground: '#737373',
+    },
+    accent: {
+      DEFAULT: '#f5f5f5',
+      foreground: '#000000',
+    },
+    card: {
+      DEFAULT: '#ffffff',
+      foreground: '#000000',
+    },
+    popover: {
+      DEFAULT: '#ffffff',
+      foreground: '#000000',
+    },
+
+    // Brand & Action
+    primary: {
+      DEFAULT: '#10b981',
+      foreground: '#ffffff',
+    },
+    secondary: {
+      DEFAULT: '#8b5cf6',
+      foreground: '#ffffff',
+    },
+
+    // Semantic
+    info: {
+      DEFAULT: '#3b82f6',
+      foreground: '#ffffff',
+    },
+    danger: {
+      DEFAULT: '#ef4444',
+      foreground: '#ffffff',
+    },
+    warning: {
+      DEFAULT: '#f59e0b',
+      foreground: '#000000',
+    },
+    success: {
+      DEFAULT: '#10b981',
+      foreground: '#ffffff',
+    },
+
+    // Border & Input
+    border: '#e5e7eb',
+    input: '#e5e7eb',
+    ring: '#3b82f6',
+  }
+});
+
+export const myDarkTheme = defineTheme({
+  colors: {
+    // Page & Container
+    background: {
+      DEFAULT: '#000000',
+      foreground: '#ffffff',
+    },
+    foreground: '#ffffff',
+    muted: {
+      DEFAULT: '#27272a',
+      foreground: '#a1a1aa',
+    },
+    accent: {
+      DEFAULT: '#27272a',
+      foreground: '#ffffff',
+    },
+
+    // Brand & Action
+    primary: {
+      DEFAULT: '#34d399',  // 더 밝은 초록
+      foreground: '#000000',  // 다크 모드에서는 검은색 텍스트
+    },
+
+    // Border & Input
+    border: '#3f3f46',
+    input: '#3f3f46',
+    ring: '#60a5fa',
+  }
+});
+```
+
+## 색상 대비 가이드라인
+
+WCAG 2.1 기준을 준수하면 좋아요:
+
+| 텍스트 크기 | 최소 대비율 | 추천 대비율 |
+|------------|-----------|-----------|
+| 일반 텍스트 (14px 이상) | 4.5:1 | 7:1 (AAA) |
+| 큰 텍스트 (18px+ 또는 bold 14px+) | 3:1 | 4.5:1 (AAA) |
+
+**대비율 확인 도구:**
+- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
+- [Coolors Contrast Checker](https://coolors.co/contrast-checker)
+
+## 커스텀 색상 추가
+
+기본 토큰 외에 커스텀 색상을 추가할 수 있어요.
+
+```typescript
+export const myTheme = defineTheme({
+  colors: {
+    // 기본 토큰
+    primary: { ... },
+
+    // 커스텀 색상
+    brand: {
+      DEFAULT: '#7c3aed',
+      foreground: '#ffffff',
+    },
+    'brand-light': {
+      DEFAULT: '#a78bfa',
+      foreground: '#000000',
+    },
+  }
+});
+```
+
+사용:
+```tsx
+<div className="bg-brand text-brand-foreground">
+  커스텀 브랜드 색상
+</div>
+```
+
+## 다음 단계
+
+- [커스터마이징](/docs/theming/customization) - 고급 테마 커스터마이징
+- [ThemeProvider](/docs/theming/theme-provider) - 테마 적용 방법

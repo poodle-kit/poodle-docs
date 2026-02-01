@@ -1,14 +1,15 @@
 import { Demo } from '@/components/Demo'
 import { PropsTable } from '@/components/PropsTable'
+import {Button} from '@poodle-kit/ui'
 
 # Button
 
-A versatile button component with multiple variants, sizes, and states.
+버튼 컴포넌트 입니다.
 
 ## Import
 
 ```tsx
-import { Button } from 'poodle'
+import { Button } from '@poodle-kit/ui'
 ```
 
 ## Usage
@@ -16,9 +17,8 @@ import { Button } from 'poodle'
 ### Basic Button
 
 <Demo>
-  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-    Default Button
-  </button>
+  <Button className='bg-black' label='버튼입니다'/>
+   
 </Demo>
 
 ```tsx
