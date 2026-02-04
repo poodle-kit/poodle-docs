@@ -1,0 +1,285 @@
+import { Demo } from '@/components/Demo'
+import { PropsTable } from '@/components/PropsTable'
+
+# Button
+
+A versatile button component with multiple variants, sizes, and states.
+
+## Import
+
+```tsx
+import { Button } from 'poodle'
+```
+
+## Usage
+
+### Basic Button
+
+<Demo>
+  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    Default Button
+  </button>
+</Demo>
+
+```tsx
+<Button>Default Button</Button>
+```
+
+### Variants
+
+Buttons come in different visual styles to convey meaning:
+
+<Demo>
+  <div className="flex flex-wrap gap-2">
+    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Primary
+    </button>
+    <button className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+      Secondary
+    </button>
+    <button className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
+      Outline
+    </button>
+    <button className="px-4 py-2 hover:bg-gray-100 rounded">
+      Ghost
+    </button>
+    <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+      Danger
+    </button>
+  </div>
+</Demo>
+
+```tsx
+<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="danger">Danger</Button>
+```
+
+### Sizes
+
+Three sizes available: small, medium (default), and large:
+
+<Demo>
+  <div className="flex flex-wrap gap-2 items-center">
+    <button className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+      Small
+    </button>
+    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Medium
+    </button>
+    <button className="px-6 py-3 text-lg bg-blue-600 text-white rounded hover:bg-blue-700">
+      Large
+    </button>
+  </div>
+</Demo>
+
+```tsx
+<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>
+```
+
+### Disabled State
+
+Disabled buttons are not interactive:
+
+<Demo>
+  <button className="px-4 py-2 bg-gray-300 text-gray-500 rounded cursor-not-allowed" disabled>
+    Disabled Button
+  </button>
+</Demo>
+
+```tsx
+<Button disabled>Disabled Button</Button>
+```
+
+### Full Width
+
+Make the button span the full width of its container:
+
+<Demo>
+  <button className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+    Full Width Button
+  </button>
+</Demo>
+
+```tsx
+<Button className="w-full">Full Width Button</Button>
+```
+
+### With Icons
+
+Add icons to enhance button meaning:
+
+<Demo>
+  <div className="flex gap-2">
+    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2">
+      <span>←</span>
+      Back
+    </button>
+    <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2">
+      Next
+      <span>→</span>
+    </button>
+  </div>
+</Demo>
+
+```tsx
+<Button>
+  <ArrowLeft /> Back
+</Button>
+<Button>
+  Next <ArrowRight />
+</Button>
+```
+
+### Loading State
+
+Show loading indicators during async operations:
+
+<Demo>
+  <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2">
+    <span className="animate-spin">⟳</span>
+    Loading...
+  </button>
+</Demo>
+
+```tsx
+<Button disabled>
+  <Spinner /> Loading...
+</Button>
+```
+
+## API Reference
+
+<PropsTable
+  data={[
+    {
+      prop: 'variant',
+      type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'",
+      default: "'primary'",
+      description: 'Visual style variant of the button'
+    },
+    {
+      prop: 'size',
+      type: "'sm' | 'md' | 'lg'",
+      default: "'md'",
+      description: 'Size of the button'
+    },
+    {
+      prop: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: 'Whether the button is disabled'
+    },
+    {
+      prop: 'onClick',
+      type: '(event: MouseEvent) => void',
+      default: 'undefined',
+      description: 'Click event handler'
+    },
+    {
+      prop: 'type',
+      type: "'button' | 'submit' | 'reset'",
+      default: "'button'",
+      description: 'HTML button type attribute'
+    },
+    {
+      prop: 'className',
+      type: 'string',
+      default: 'undefined',
+      description: 'Additional CSS classes'
+    }
+  ]}
+/>
+
+## Examples
+
+### Form Submit Button
+
+```tsx
+function LoginForm() {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Handle login
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Input type="email" placeholder="Email" />
+      <Input type="password" placeholder="Password" />
+      <Button type="submit" variant="primary">
+        Sign In
+      </Button>
+    </form>
+  )
+}
+```
+
+### Async Action
+
+```tsx
+function AsyncButton() {
+  const [loading, setLoading] = useState(false)
+
+  const handleClick = async () => {
+    setLoading(true)
+    try {
+      await fetchData()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Button onClick={handleClick} disabled={loading}>
+      {loading ? 'Loading...' : 'Load Data'}
+    </Button>
+  )
+}
+```
+
+### Button Group
+
+```tsx
+function ButtonGroup() {
+  return (
+    <div className="flex gap-2">
+      <Button variant="outline">Cancel</Button>
+      <Button variant="primary">Save</Button>
+    </div>
+  )
+}
+```
+
+## Accessibility
+
+- Uses semantic `<button>` element
+- Keyboard accessible (Enter and Space keys)
+- Proper focus indicators
+- ARIA attributes for disabled state
+- Screen reader friendly labels
+
+## Best Practices
+
+### Do ✅
+
+- Use clear, action-oriented labels ("Save Changes" not "Submit")
+- Use primary variant sparingly for main actions
+- Provide visual feedback on hover and active states
+- Consider button placement and grouping
+
+### Don't ❌
+
+- Don't use vague labels like "Click Here"
+- Don't make buttons too small on mobile
+- Don't use multiple primary buttons in the same view
+- Don't disable buttons without explanation
+
+## Related Components
+
+- [Input](/docs/components/input) - Form input fields
+- [Card](/docs/components/card) - Container component
+- [Modal](/docs/components/modal) - Dialog component

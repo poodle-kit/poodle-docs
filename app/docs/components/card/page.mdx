@@ -1,0 +1,271 @@
+import { Demo } from '@/components/Demo'
+import { PropsTable } from '@/components/PropsTable'
+
+# Card
+
+A flexible container component for grouping related content.
+
+## Import
+
+```tsx
+import { Card } from 'poodle'
+```
+
+## Usage
+
+### Basic Card
+
+<Demo>
+  <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+    <h3 className="text-lg font-semibold mb-2">Card Title</h3>
+    <p className="text-gray-600">This is a basic card component with some content inside.</p>
+  </div>
+</Demo>
+
+```tsx
+<Card>
+  <h3>Card Title</h3>
+  <p>This is a basic card component with some content inside.</p>
+</Card>
+```
+
+### Card with Header and Footer
+
+<Demo>
+  <div className="border border-gray-200 rounded-lg bg-white shadow-sm overflow-hidden">
+    <div className="border-b border-gray-200 px-6 py-4 bg-gray-50">
+      <h3 className="text-lg font-semibold">Card Header</h3>
+    </div>
+    <div className="px-6 py-4">
+      <p className="text-gray-600">Card body content goes here.</p>
+    </div>
+    <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+      <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Action
+      </button>
+    </div>
+  </div>
+</Demo>
+
+```tsx
+<Card>
+  <Card.Header>
+    <h3>Card Header</h3>
+  </Card.Header>
+  <Card.Body>
+    <p>Card body content goes here.</p>
+  </Card.Body>
+  <Card.Footer>
+    <Button>Action</Button>
+  </Card.Footer>
+</Card>
+```
+
+### Hover Effect
+
+<Demo>
+  <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
+    <h3 className="text-lg font-semibold mb-2">Hover Me</h3>
+    <p className="text-gray-600">This card has a hover effect.</p>
+  </div>
+</Demo>
+
+```tsx
+<Card hoverable>
+  <h3>Hover Me</h3>
+  <p>This card has a hover effect.</p>
+</Card>
+```
+
+### Card Grid
+
+<Demo>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+      <div className="text-3xl mb-2">🎨</div>
+      <h3 className="text-lg font-semibold mb-2">Design</h3>
+      <p className="text-gray-600">Beautiful UI components</p>
+    </div>
+    <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+      <div className="text-3xl mb-2">⚡</div>
+      <h3 className="text-lg font-semibold mb-2">Performance</h3>
+      <p className="text-gray-600">Lightning fast</p>
+    </div>
+    <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm">
+      <div className="text-3xl mb-2">🔧</div>
+      <h3 className="text-lg font-semibold mb-2">Customizable</h3>
+      <p className="text-gray-600">Easy to customize</p>
+    </div>
+  </div>
+</Demo>
+
+```tsx
+<div className="grid grid-cols-3 gap-4">
+  <Card>
+    <h3>Design</h3>
+    <p>Beautiful UI components</p>
+  </Card>
+  <Card>
+    <h3>Performance</h3>
+    <p>Lightning fast</p>
+  </Card>
+  <Card>
+    <h3>Customizable</h3>
+    <p>Easy to customize</p>
+  </Card>
+</div>
+```
+
+### Product Card
+
+<Demo>
+  <div className="border border-gray-200 rounded-lg bg-white shadow-sm overflow-hidden max-w-sm">
+    <div className="aspect-video bg-gradient-to-br from-blue-400 to-purple-500"></div>
+    <div className="p-6">
+      <span className="inline-block px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded">
+        New
+      </span>
+      <h3 className="text-xl font-bold mt-2 mb-2">Product Name</h3>
+      <p className="text-gray-600 mb-4">A brief description of the product.</p>
+      <div className="flex items-center justify-between">
+        <span className="text-2xl font-bold">$99</span>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Buy Now
+        </button>
+      </div>
+    </div>
+  </div>
+</Demo>
+
+```tsx
+<Card className="max-w-sm">
+  <img src="/product.jpg" alt="Product" />
+  <Badge>New</Badge>
+  <h3>Product Name</h3>
+  <p>A brief description of the product.</p>
+  <div className="flex justify-between items-center">
+    <span className="text-2xl font-bold">$99</span>
+    <Button>Buy Now</Button>
+  </div>
+</Card>
+```
+
+## API Reference
+
+<PropsTable
+  data={[
+    {
+      prop: 'children',
+      type: 'ReactNode',
+      default: 'undefined',
+      description: 'Card content'
+    },
+    {
+      prop: 'className',
+      type: 'string',
+      default: 'undefined',
+      description: 'Additional CSS classes'
+    },
+    {
+      prop: 'hoverable',
+      type: 'boolean',
+      default: 'false',
+      description: 'Enable hover effect'
+    },
+    {
+      prop: 'padding',
+      type: "'none' | 'sm' | 'md' | 'lg'",
+      default: "'md'",
+      description: 'Internal padding'
+    },
+    {
+      prop: 'shadow',
+      type: "'none' | 'sm' | 'md' | 'lg'",
+      default: "'sm'",
+      description: 'Shadow depth'
+    }
+  ]}
+/>
+
+## Examples
+
+### Stats Card
+
+```tsx
+function StatsCard() {
+  return (
+    <Card>
+      <h4 className="text-gray-500 text-sm">Total Users</h4>
+      <p className="text-3xl font-bold mt-2">12,345</p>
+      <div className="text-green-600 text-sm mt-2">
+        ↑ 12% from last month
+      </div>
+    </Card>
+  )
+}
+```
+
+### Feature Card
+
+```tsx
+function FeatureCard() {
+  return (
+    <Card hoverable className="text-center">
+      <div className="text-4xl mb-4">🚀</div>
+      <h3 className="text-xl font-bold mb-2">Fast Performance</h3>
+      <p className="text-gray-600">
+        Optimized for speed and efficiency
+      </p>
+    </Card>
+  )
+}
+```
+
+### User Profile Card
+
+```tsx
+function ProfileCard() {
+  return (
+    <Card>
+      <div className="flex items-center gap-4">
+        <img
+          src="/avatar.jpg"
+          alt="User"
+          className="w-16 h-16 rounded-full"
+        />
+        <div>
+          <h3 className="font-bold">John Doe</h3>
+          <p className="text-gray-600">Software Engineer</p>
+        </div>
+      </div>
+      <div className="mt-4 flex gap-2">
+        <Button variant="outline" size="sm">
+          Message
+        </Button>
+        <Button size="sm">Follow</Button>
+      </div>
+    </Card>
+  )
+}
+```
+
+## Best Practices
+
+### Do ✅
+
+- Use cards to group related content
+- Keep card content concise
+- Use consistent padding
+- Consider hover effects for interactive cards
+
+### Don't ❌
+
+- Don't nest cards too deeply
+- Don't overuse shadows
+- Don't make cards too wide
+- Don't mix too many card styles
+
+## Related Components
+
+- [Button](/docs/components/button) - Actions within cards
+- [Modal](/docs/components/modal) - Overlay dialogs
