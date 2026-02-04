@@ -1,0 +1,327 @@
+# ThemeProvider
+
+`ThemeProvider`는 Poodle UI의 핵심 컴포넌트로, 앱 전체에 브랜드 테마를 주입하고 Light/Dark 모드를 관리해요.
+
+## 기본 사용법
+
+앱의 최상위에서 `ThemeProvider`로 감싰다면 모든 자식 컴포넌트에 테마가 적용되어요.
+
+```tsx
+import { ThemeProvider, defineTheme } from '@poodle-kit/ui/theme';
+
+const myTheme = defineTheme({
+  colors: {
+    primary: {
+      DEFAULT: '#10b981',
+      foreground: '#ffffff',
+    }
+  }
+});
+
+function App() {
+  return (
+    <ThemeProvider config={myTheme}>
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+## Props
+
+### `config`
+
+- **타입:** `ThemeConfig`
+- **기본값:** `undefined`
+- **설명:** Light 모드에 적용될 테마 설정
+
+```tsx
+<ThemeProvider config={myLightTheme}>
+  <App />
+</ThemeProvider>
+```
+
+### `darkConfig`
+
+- **타입:** `ThemeConfig`
+- **기본값:** `undefined`
+- **설명:** Dark 모드에 적용될 테마 설정
+
+```tsx
+<ThemeProvider
+  config={myLightTheme}
+  darkConfig={myDarkTheme}
+>
+  <App />
+</ThemeProvider>
+```
+
+### `defaultTheme`
+
+- **타입:** `'light' | 'dark' | 'system'`
+- **기본값:** `'system'`
+- **설명:** 앱 초기 로드 시 사용할 테마
+
+```tsx
+<ThemeProvider
+  defaultTheme="dark"  // 다크 모드로 시작
+  config={myLightTheme}
+  darkConfig={myDarkTheme}
+>
+  <App />
+</ThemeProvider>
+```
+
+### `storageKey`
+
+- **타입:** `string`
+- **기본값:** `'poodle-ui-theme'`
+- **설명:** LocalStorage에 저장될 키 이름
+
+```tsx
+<ThemeProvider
+  storageKey="my-app-theme"  // 커스텀 storage key
+  config={myTheme}
+>
+  <App />
+</ThemeProvider>
+```
+
+### `enableColorSchemeSync`
+
+- **타입:** `boolean`
+- **기본값:** `true`
+- **설명:** 시스템 테마 변경 자동 감지 여부
+
+```tsx
+<ThemeProvider
+  enableColorSchemeSync={false}  // 시스템 테마 동기화 비활성화
+  config={myTheme}
+>
+  <App />
+</ThemeProvider>
+```
+
+## 프레임워크별 설정
+
+### Next.js App Router
+
+```tsx
+// app/layout.tsx
+import { ThemeProvider, defineTheme } from '@poodle-kit/ui/theme';
+import '@poodle-kit/ui/styles.css';
+
+const theme = defineTheme({ /* ... */ });
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="ko" suppressHydrationWarning>
+      <body>
+        <ThemeProvider config={theme} darkConfig={darkTheme}>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+**주의:** `html` 태그에 `suppressHydrationWarning`을 추가해야 해요. ThemeProvider가 클라이언트에서 다크 모드 클래스를 주입하기 때문이에요.
+
+### Next.js Pages Router
+
+```tsx
+// pages/_app.tsx
+import { ThemeProvider, defineTheme } from '@poodle-kit/ui/theme';
+import '@poodle-kit/ui/styles.css';
+import type { AppProps } from 'next/app';
+
+const theme = defineTheme({ /* ... */ });
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ThemeProvider config={theme} darkConfig={darkTheme}>
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
+}
+```
+
+### Vite
+
+```tsx
+// src/main.tsx
+import { ThemeProvider, defineTheme } from '@poodle-kit/ui/theme';
+import '@poodle-kit/ui/styles.css';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const theme = defineTheme({ /* ... */ });
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <ThemeProvider config={theme} darkConfig={darkTheme}>
+    <App />
+  </ThemeProvider>
+);
+```
+
+### Remix
+
+```tsx
+// app/root.tsx
+import { ThemeProvider, defineTheme } from '@poodle-kit/ui/theme';
+import '@poodle-kit/ui/styles.css';
+
+const theme = defineTheme({ /* ... */ });
+
+export default function App() {
+  return (
+    <html lang="ko">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <ThemeProvider config={theme} darkConfig={darkTheme}>
+          <Outlet />
+        </ThemeProvider>
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
+## useTheme Hook
+
+테마를 동적으로 변경하려면 `useTheme` 훅을 사용하면 되어요.
+
+```tsx
+import { useTheme } from '@poodle-kit/ui/theme';
+
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      현재: {theme} 모드
+    </button>
+  );
+}
+```
+
+### useTheme 반환값
+
+```typescript
+{
+  theme: 'light' | 'dark' | 'system',  // 현재 테마
+  setTheme: (theme: Theme) => void,     // 테마 변경 함수
+}
+```
+
+## 고급 사용법
+
+### 다중 브랜드 테마
+
+여러 브랜드를 지원하는 앱의 경우 아래와 같이 구성할 수 있어요:
+
+```tsx
+// themes/brand-a.ts
+export const brandATheme = defineTheme({
+  colors: {
+    primary: { DEFAULT: '#10b981', foreground: '#ffffff' }
+  }
+});
+
+// themes/brand-b.ts
+export const brandBTheme = defineTheme({
+  colors: {
+    primary: { DEFAULT: '#3b82f6', foreground: '#ffffff' }
+  }
+});
+
+// App.tsx
+function App() {
+  const [currentBrand, setCurrentBrand] = useState('a');
+
+  return (
+    <ThemeProvider
+      config={currentBrand === 'a' ? brandATheme : brandBTheme}
+    >
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+### 테마 전환 애니메이션
+
+CSS transitions를 사용하여 부드러운 테마 전환을 구현할 수 있어요.
+
+```css
+/* globals.css */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+```
+
+## 문제 해결
+
+### ThemeProvider를 찾을 수 없음
+
+```bash
+Error: Cannot find module '@poodle-kit/ui/theme'
+```
+
+**해결:** package.json의 exports를 확인해보세요.
+
+```json
+{
+  "exports": {
+    "./theme": "./dist/theme/index.js"
+  }
+}
+```
+
+### 테마가 적용되지 않음
+
+1. **CSS import 확인**
+   ```tsx
+   import '@poodle-kit/ui/styles.css';
+   ```
+
+2. **ThemeProvider 위치 확인**
+   - 앱 최상위에 위치해야 해요
+   - 모든 컴포넌트를 감싸야 해요
+
+3. **Tailwind 설정 확인**
+   ```js
+   // tailwind.config.js
+   module.exports = {
+     darkMode: 'class',  // 중요!
+   }
+   ```
+
+### Next.js hydration 에러
+
+```
+Warning: Prop `className` did not match
+```
+
+**해결:** `html` 태그에 `suppressHydrationWarning`을 추가하면 되어요.
+
+```tsx
+<html lang="ko" suppressHydrationWarning>
+```
+
+## 다음 단계
+
+- [색상 시스템](/docs/theming/colors) - 색상 토큰 구조 이해하기
+- [커스터마이징](/docs/theming/customization) - 고급 커스터마이징 방법

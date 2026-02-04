@@ -1,0 +1,517 @@
+# 커스터마이징
+
+Poodle UI의 고급 커스터마이징 방법을 알아볼게요.
+
+## Radius (모서리 둥글기)
+
+컴포넌트의 모서리 둥글기를 조정할 수 있어요.
+
+```typescript
+import { defineTheme } from '@poodle-kit/ui/theme';
+
+export const myTheme = defineTheme({
+  radius: {
+    none: '0',
+    sm: '0.125rem',     // 2px
+    base: '0.25rem',    // 4px
+    md: '0.375rem',     // 6px (기본값)
+    lg: '0.5rem',       // 8px
+    xl: '0.75rem',      // 12px
+    '2xl': '1rem',      // 16px
+    '3xl': '1.5rem',    // 24px
+    full: '9999px',     // 완전히 둥글게
+  }
+});
+```
+
+### 사용 예시
+
+```tsx
+// 컴포넌트는 자동으로 var(--radius-md) 사용
+<Button>기본 모서리</Button>
+
+// 직접 커스텀
+<div className="rounded-[var(--radius-lg)]">
+  큰 모서리
+</div>
+```
+
+## Spacing (간격)
+
+레이아웃 간격을 정의할 수 있어요.
+
+```typescript
+export const myTheme = defineTheme({
+  spacing: {
+    xs: '0.25rem',    // 4px
+    sm: '0.5rem',     // 8px
+    md: '1rem',       // 16px
+    lg: '1.5rem',     // 24px
+    xl: '2rem',       // 32px
+    '2xl': '3rem',    // 48px
+  }
+});
+```
+
+사용:
+```tsx
+<div className="p-[var(--spacing-md)] gap-[var(--spacing-sm)]">
+  ...
+</div>
+```
+
+## Typography (타이포그래피)
+
+폰트 크기와 행간을 커스터마이징할 수 있어요.
+
+```typescript
+export const myTheme = defineTheme({
+  fontSize: {
+    xs: ['0.75rem', { lineHeight: '1rem' }],
+    sm: ['0.875rem', { lineHeight: '1.25rem' }],
+    base: ['1rem', { lineHeight: '1.5rem' }],
+    lg: ['1.125rem', { lineHeight: '1.75rem' }],
+    xl: ['1.25rem', { lineHeight: '1.75rem' }],
+    '2xl': ['1.5rem', { lineHeight: '2rem' }],
+    '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+    '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+  }
+});
+```
+
+### 폰트 패밀리
+
+```typescript
+export const myTheme = defineTheme({
+  fontFamily: {
+    sans: ['Inter', 'system-ui', 'sans-serif'],
+    serif: ['Georgia', 'serif'],
+    mono: ['Fira Code', 'monospace'],
+  }
+});
+```
+
+사용:
+```tsx
+<div className="font-[var(--font-sans)] text-[var(--text-lg)]">
+  ...
+</div>
+```
+
+## Shadows (그림자)
+
+그림자 효과를 정의할 수 있어요.
+
+```typescript
+export const myTheme = defineTheme({
+  shadows: {
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+    md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+    lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+    xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+    '2xl': '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+    none: 'none',
+  }
+});
+```
+
+사용:
+```tsx
+<Card className="shadow-[var(--shadow-md)]">
+  ...
+</Card>
+```
+
+## Z-Index (레이어 순서)
+
+컴포넌트의 레이어 순서를 관리할 수 있어요.
+
+```typescript
+export const myTheme = defineTheme({
+  zIndex: {
+    modal: '500',
+    dropdown: '400',
+    overlay: '300',
+    header: '100',
+    base: '0',
+  }
+});
+```
+
+사용:
+```tsx
+<Modal className="z-[var(--z-modal)]">
+  ...
+</Modal>
+```
+
+## Animation (애니메이션)
+
+애니메이션 duration과 easing을 설정할 수 있어요.
+
+```typescript
+export const myTheme = defineTheme({
+  animation: {
+    duration: {
+      fast: '150ms',
+      normal: '200ms',
+      slow: '300ms',
+    },
+    ease: {
+      in: 'ease-in',
+      out: 'ease-out',
+      'in-out': 'ease-in-out',
+    },
+  }
+});
+```
+
+사용:
+```tsx
+<Button className="transition-all duration-[var(--duration-normal)] ease-[var(--ease-out)]">
+  ...
+</Button>
+```
+
+## 전체 테마 예시
+
+모든 커스터마이징을 결합한 완전한 테마 예시예요.
+
+```typescript
+import { defineTheme } from '@poodle-kit/ui/theme';
+
+export const myCompleteTheme = defineTheme({
+  colors: {
+    // 색상 정의 (이전 섹션 참고)
+    primary: {
+      DEFAULT: '#7c3aed',
+      foreground: '#ffffff',
+    },
+    background: {
+      DEFAULT: '#ffffff',
+      foreground: '#000000',
+    },
+    // ... 나머지 색상
+  },
+
+  radius: {
+    none: '0',
+    sm: '0.25rem',
+    md: '0.5rem',
+    lg: '0.75rem',
+    full: '9999px',
+  },
+
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+  },
+
+  fontSize: {
+    xs: ['0.75rem', { lineHeight: '1rem' }],
+    sm: ['0.875rem', { lineHeight: '1.25rem' }],
+    base: ['1rem', { lineHeight: '1.5rem' }],
+    lg: ['1.125rem', { lineHeight: '1.75rem' }],
+    xl: ['1.25rem', { lineHeight: '1.75rem' }],
+  },
+
+  fontFamily: {
+    sans: ['Pretendard', '-apple-system', 'sans-serif'],
+    mono: ['Fira Code', 'monospace'],
+  },
+
+  fontWeight: {
+    normal: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+
+  shadows: {
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+    md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+    lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+    xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+  },
+
+  zIndex: {
+    toast: '1000',
+    modal: '500',
+    dropdown: '400',
+    overlay: '300',
+    header: '100',
+  },
+
+  animation: {
+    duration: {
+      fast: '150ms',
+      normal: '200ms',
+      slow: '300ms',
+    },
+    ease: {
+      in: 'cubic-bezier(0.4, 0, 1, 1)',
+      out: 'cubic-bezier(0, 0, 0.2, 1)',
+      'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
+    },
+  },
+});
+```
+
+## CSS 변수 직접 사용
+
+테마 토큰은 CSS 변수로 변환되어 어디서든 사용할 수 있어요.
+
+### 컴포넌트에서 사용
+
+```tsx
+function CustomCard() {
+  return (
+    <div
+      style={{
+        backgroundColor: 'var(--color-background)',
+        color: 'var(--color-foreground)',
+        borderRadius: 'var(--radius-lg)',
+        padding: 'var(--spacing-md)',
+        boxShadow: 'var(--shadow-md)',
+      }}
+    >
+      커스텀 카드
+    </div>
+  );
+}
+```
+
+### CSS 파일에서 사용
+
+```css
+/* styles.css */
+.custom-button {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: background-color var(--duration-normal) var(--ease-out);
+}
+
+.custom-button:hover {
+  background-color: var(--color-primary);
+  opacity: 0.9;
+}
+```
+
+### Tailwind 클래스와 혼용
+
+```tsx
+<div className="bg-primary text-primary-foreground p-[var(--spacing-md)] rounded-[var(--radius-lg)]">
+  Tailwind + CSS 변수
+</div>
+```
+
+## 테마 빌드 시간 생성
+
+서버 컴포넌트나 빌드 시간에 CSS 문자열을 생성할 수 있어요.
+
+```typescript
+import { generateThemeCss, defineTheme } from '@poodle-kit/ui/theme';
+
+const myTheme = defineTheme({
+  colors: { /* ... */ }
+});
+
+// CSS 문자열 생성
+const cssString = generateThemeCss(myTheme);
+
+console.log(cssString);
+// Output:
+//   --color-primary: #7c3aed;
+//   --color-primary-foreground: #ffffff;
+//   --radius-md: 0.5rem;
+```
+
+### 사용 사례
+
+1. **정적 CSS 파일 생성**
+   ```typescript
+   import fs from 'fs';
+   import { generateThemeCss } from '@poodle-kit/ui/theme';
+
+   const css = `:root {\n${generateThemeCss(myTheme)}\n}`;
+   fs.writeFileSync('theme.css', css);
+   ```
+
+2. **Next.js API Route**
+   ```typescript
+   // app/api/theme/route.ts
+   import { generateThemeCss } from '@poodle-kit/ui/theme';
+
+   export function GET() {
+     const css = `:root {\n${generateThemeCss(myTheme)}\n}`;
+
+     return new Response(css, {
+       headers: { 'Content-Type': 'text/css' },
+     });
+   }
+   ```
+
+## 테마 전환 애니메이션
+
+부드러운 테마 전환을 위한 CSS transitions:
+
+```css
+/* globals.css */
+:root {
+  --transition-duration: 200ms;
+}
+
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: var(--transition-duration);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 애니메이션 비활성화가 필요한 요소 */
+.no-transition {
+  transition: none;
+}
+```
+
+## 다중 테마 전환
+
+여러 브랜드나 고객을 위한 다중 테마:
+
+```typescript
+// themes/index.ts
+export const brandA = defineTheme({
+  colors: {
+    primary: { DEFAULT: '#10b981', foreground: '#ffffff' }
+  }
+});
+
+export const brandB = defineTheme({
+  colors: {
+    primary: { DEFAULT: '#3b82f6', foreground: '#ffffff' }
+  }
+});
+
+export const brandC = defineTheme({
+  colors: {
+    primary: { DEFAULT: '#f59e0b', foreground: '#000000' }
+  }
+});
+```
+
+```tsx
+// App.tsx
+function App() {
+  const [theme, setTheme] = useState<'a' | 'b' | 'c'>('a');
+
+  const themeMap = {
+    a: brandA,
+    b: brandB,
+    c: brandC,
+  };
+
+  return (
+    <ThemeProvider config={themeMap[theme]}>
+      <select onChange={(e) => setTheme(e.target.value as any)}>
+        <option value="a">Brand A</option>
+        <option value="b">Brand B</option>
+        <option value="c">Brand C</option>
+      </select>
+
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+## 베스트 프랙티스
+
+### 1. 테마 파일 분리
+
+```
+src/
+├── theme/
+│   ├── index.ts          # 메인 export
+│   ├── light.ts          # Light 테마
+│   ├── dark.ts           # Dark 테마
+│   ├── colors.ts         # 색상 상수
+│   └── tokens.ts         # 기타 토큰 (radius, spacing 등)
+```
+
+### 2. 색상 상수 재사용
+
+```typescript
+// theme/colors.ts
+export const BRAND_COLORS = {
+  green: {
+    50: '#f0fdf4',
+    500: '#10b981',
+    900: '#064e3b',
+  },
+} as const;
+
+// theme/light.ts
+import { BRAND_COLORS } from './colors';
+
+export const lightTheme = defineTheme({
+  colors: {
+    primary: {
+      DEFAULT: BRAND_COLORS.green[500],
+      foreground: '#ffffff',
+    }
+  }
+});
+```
+
+### 3. 테마 검증
+
+색상 대비를 확인하는 유틸리티:
+
+```typescript
+// utils/validate-theme.ts
+function getContrastRatio(color1: string, color2: string): number {
+  // WCAG 대비 계산 로직
+  // ...
+  return ratio;
+}
+
+function validateTheme(theme: ThemeConfig) {
+  const { colors } = theme;
+
+  Object.entries(colors).forEach(([key, value]) => {
+    if (typeof value === 'object' && 'DEFAULT' in value) {
+      const ratio = getContrastRatio(value.DEFAULT, value.foreground);
+
+      if (ratio < 4.5) {
+        console.warn(`${key}: 대비가 부족해요 (${ratio.toFixed(2)}:1)`);
+      }
+    }
+  });
+}
+```
+
+### 4. TypeScript 타입 활용
+
+```typescript
+import type { ThemeConfig } from '@poodle-kit/ui/theme';
+
+// 타입 안전한 테마 정의
+const myTheme: ThemeConfig = {
+  colors: {
+    primary: {  // 자동 완성 지원
+      DEFAULT: '#10b981',
+      foreground: '#ffffff',
+    }
+  }
+};
+```
+
+## 다음 단계
+
+- [색상 시스템](/docs/theming/colors) - 색상 토큰 구조 이해하기
+- [ThemeProvider](/docs/theming/theme-provider) - 테마 적용 방법
+- [Components](/docs/components) - 컴포넌트 사용법

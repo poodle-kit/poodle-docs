@@ -1,0 +1,182 @@
+# 테마 시스템
+
+Poodle UI의 런타임 테마 시스템을 사용하여 브랜드 아이덴티티에 맞게 디자인을 커스터마이징할 수 있어요.
+
+## 주요 기능
+
+### 🎨 런타임 테마 주입
+
+TypeScript로 정의한 테마를 런타임에 주입하여 전체 앱의 디자인을 변경할 수 있어요.
+
+```tsx
+import { ThemeProvider, defineTheme } from '@poodle-kit/ui';
+
+const myTheme = defineTheme({
+  colors: {
+    primary: {
+      DEFAULT: '#10b981',
+      foreground: '#ffffff',
+    }
+  }
+});
+
+<ThemeProvider config={myTheme}>
+  <App />
+</ThemeProvider>
+```
+
+### 🌓 Light/Dark 모드 지원
+
+Light 모드와 Dark 모드를 위한 별도 테마를 정의하고 자동 전환할 수 있어요.
+
+```tsx
+<ThemeProvider
+  config={myLightTheme}
+  darkConfig={myDarkTheme}
+>
+  <App />
+</ThemeProvider>
+```
+
+### ♿ 접근성 자동 보장
+
+DEFAULT + foreground 색상 패턴으로 텍스트와 배경의 충분한 대비를 자동으로 유지해요.
+
+```typescript
+// 테마 정의 시 대비 검증
+primary: {
+  DEFAULT: '#10b981',      // 배경색
+  foreground: '#ffffff',   // 텍스트색 (충분한 대비 보장)
+}
+```
+
+### 🎯 타입 안전성
+
+TypeScript 제네릭을 활용한 `defineTheme` 함수로 타입 안전한 테마 정의가 가능해요.
+
+```typescript
+export const myTheme = defineTheme({
+  colors: {
+    primary: { /* 자동 완성 지원 */ }
+  }
+});
+```
+
+## 3단계 우선순위 시스템
+
+Poodle UI의 테마 시스템은 3단계 fallback 구조로 작동해요:
+
+```
+1️⃣ Fallback (theme.css)
+   - Poodle이 제공하는 기본 색상
+   - ThemeProvider 없이도 작동
+
+   ↓ (런타임 오버라이드)
+
+2️⃣ Runtime Theme (ThemeProvider)
+   - 사용자가 주입한 브랜드 색상
+   - config/darkConfig props
+
+   ↓ (참조)
+
+3️⃣ Tailwind Classes (컴포넌트)
+   - bg-primary, text-foreground 등
+   - CSS 변수 참조
+```
+
+## 빠른 시작
+
+### 1. 기본 사용 (ThemeProvider 없음)
+
+가장 간단한 방법이에요. Poodle의 기본 테마가 자동으로 적용되어요.
+
+```tsx
+import { Button } from '@poodle-kit/ui';
+import '@poodle-kit/ui/styles.css';
+
+function App() {
+  return <Button>클릭하세요</Button>
+}
+```
+
+### 2. 브랜드 색상 주입
+
+브랜드 아이덴티티에 맞게 색상을 커스터마이징할 수 있어요.
+
+```tsx
+import { ThemeProvider, defineTheme } from '@poodle-kit/ui/theme';
+
+const brandTheme = defineTheme({
+  colors: {
+    primary: {
+      DEFAULT: '#7C3AED',  // 보라색
+      foreground: '#ffffff',
+    },
+    background: {
+      DEFAULT: '#ffffff',
+      foreground: '#000000',
+    },
+  },
+  radius: {
+    md: '0.5rem',  // 더 둥근 모서리
+  }
+});
+
+function App() {
+  return (
+    <ThemeProvider config={brandTheme}>
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+### 3. Light/Dark 모드 지원
+
+```tsx
+const lightTheme = defineTheme({
+  colors: {
+    primary: { DEFAULT: '#7C3AED', foreground: '#ffffff' },
+    background: { DEFAULT: '#ffffff', foreground: '#000000' },
+  }
+});
+
+const darkTheme = defineTheme({
+  colors: {
+    primary: { DEFAULT: '#A78BFA', foreground: '#000000' },
+    background: { DEFAULT: '#000000', foreground: '#ffffff' },
+  }
+});
+
+<ThemeProvider config={lightTheme} darkConfig={darkTheme}>
+  <App />
+</ThemeProvider>
+```
+
+## shadcn/ui 호환
+
+Poodle UI의 테마 시스템은 [shadcn/ui](https://ui.shadcn.com)의 색상 패턴을 따라요.
+
+```typescript
+// shadcn/ui와 동일한 구조
+colors: {
+  background: { ... },
+  foreground: { ... },
+  primary: { ... },
+  secondary: { ... },
+  muted: { ... },
+  accent: { ... },
+  // ...
+}
+```
+
+이를 통해:
+- ✅ shadcn/ui 프로젝트에서 쉽게 마이그레이션 가능
+- ✅ 동일한 디자인 패턴 및 네이밍 컨벤션
+- ✅ 커뮤니티 테마 및 도구 호환성
+
+## 다음 단계
+
+- [ThemeProvider 사용법](/docs/theming/theme-provider) - 테마 주입 및 설정
+- [색상 시스템](/docs/theming/colors) - 색상 토큰 구조 이해하기
+- [커스터마이징](/docs/theming/customization) - 고급 커스터마이징 방법
