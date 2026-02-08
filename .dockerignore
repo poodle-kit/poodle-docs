@@ -55,5 +55,5 @@ CHANGELOG.md
 .prettierignore
 .eslintrc
 eslint.config.mjs
-tsconfig.json
 *.pem
+
