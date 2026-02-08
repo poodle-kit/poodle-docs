@@ -48,54 +48,34 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Deploy preview to server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: dreampaste.com
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: |
-            # 환경 변수 설정
-            export PR_NUMBER=${{ github.event.pull_request.number }}
-            export CONTAINER_NAME="poodle-docs-pr-${PR_NUMBER}"
-            export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${PR_NUMBER}"
-            export PORT=$((3000 + $PR_NUMBER))
-            export SUBDOMAIN="pr-${PR_NUMBER}.poodle-kit.my"
+      - name: Deploy preview via webhook
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
 
-            echo "Deploying PR #${PR_NUMBER} to port ${PORT}"
+          echo "Calling webhook to deploy PR #${PR_NUMBER}..."
 
-            # 기존 PR 컨테이너 중지 및 제거
-            docker stop $CONTAINER_NAME 2>/dev/null || true
-            docker rm $CONTAINER_NAME 2>/dev/null || true
+          RESPONSE=$(curl -X POST http://dreampaste.com:9000/webhook/pr-preview \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"secret\": \"${{ secrets.WEBHOOK_SECRET }}\",
+              \"action\": \"deploy\",
+              \"pr_number\": \"${PR_NUMBER}\",
+              \"image_tag\": \"pr-${PR_NUMBER}\"
+            }" \
+            -w "\n%{http_code}" \
+            -s)
 
-            # 최신 이미지 pull
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-            docker pull $IMAGE
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
 
-            # 새 컨테이너 실행
-            docker run -d \
-              --name $CONTAINER_NAME \
-              --restart unless-stopped \
-              -p $PORT:3000 \
-              -e NODE_ENV=production \
-              -e PR_NUMBER=$PR_NUMBER \
-              $IMAGE
+          echo "Response: $BODY"
 
-            # Caddy 설정 업데이트
-            sudo /usr/local/bin/deploy-poodle-pr.sh $PR_NUMBER $PORT
-
-            # 로그 확인
-            echo "Waiting for container to start..."
-            sleep 5
-            docker logs $CONTAINER_NAME --tail 30
-
-            # 컨테이너 상태 확인
-            if docker ps | grep -q $CONTAINER_NAME; then
-              echo "✅ PR Preview container is running"
-            else
-              echo "❌ PR Preview container failed to start"
-              exit 1
-            fi
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ PR Preview deployed successfully"
+          else
+            echo "❌ Webhook call failed with status $HTTP_CODE"
+            exit 1
+          fi
 
       - name: Comment PR with preview URL
         uses: actions/github-script@v7

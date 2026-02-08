@@ -50,52 +50,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Deploy to production server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: dreampaste.com
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: |
-            # 환경 변수 설정
-            export CONTAINER_NAME="poodle-docs-prod"
-            export IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
-            export PORT=3000
-
-            # 기존 컨테이너 중지 및 제거
-            docker stop $CONTAINER_NAME 2>/dev/null || true
-            docker rm $CONTAINER_NAME 2>/dev/null || true
-
-            # 최신 이미지 pull
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-            docker pull $IMAGE
-
-            # 새 컨테이너 실행
-            docker run -d \
-              --name $CONTAINER_NAME \
-              --restart unless-stopped \
-              -p $PORT:3000 \
-              -e NODE_ENV=production \
-              $IMAGE
-
-            # 로그 확인
-            echo "Waiting for container to start..."
-            sleep 5
-            docker logs $CONTAINER_NAME --tail 50
-
-            # 컨테이너 상태 확인
-            if docker ps | grep -q $CONTAINER_NAME; then
-              echo "✅ Container is running successfully"
-            else
-              echo "❌ Container failed to start"
-              exit 1
-            fi
-
-      - name: Notify deployment status
-        if: always()
+      - name: Deployment complete (Watchtower will auto-update)
         run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            echo "✅ Production deployment successful: https://poodle-kit.my"
-          else
-            echo "❌ Production deployment failed"
-          fi
+          echo "✅ Docker image pushed to registry"
+          echo "🤖 Watchtower will automatically detect and deploy the new version"
+          echo "🌐 Production URL: https://poodle-kit.my"
+          echo ""
+          echo "Note: Deployment may take 1-2 minutes for Watchtower to detect and apply"
