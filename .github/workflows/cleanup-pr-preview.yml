@@ -18,7 +18,7 @@ jobs:
 
           echo "🧹 Cleaning up PR #${PR_NUMBER} preview via webhook..."
 
-          RESPONSE=$(curl -s -X POST http://dreampaste.com:9000/webhook/pr-preview \
+          RESPONSE=$(curl -s -X POST https://webhook.poodle-kit.my/webhook/pr-preview \
             -H "Content-Type: application/json" \
             -d "{
               \"secret\": \"${{ secrets.WEBHOOK_SECRET }}\",

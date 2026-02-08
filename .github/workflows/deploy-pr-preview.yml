@@ -54,7 +54,7 @@ jobs:
 
           echo "Calling webhook to deploy PR #${PR_NUMBER}..."
 
-          RESPONSE=$(curl -X POST http://dreampaste.com:9000/webhook/pr-preview \
+          RESPONSE=$(curl -X POST https://webhook.poodle-kit.my/webhook/pr-preview \
             -H "Content-Type: application/json" \
             -d "{
               \"secret\": \"${{ secrets.WEBHOOK_SECRET }}\",
