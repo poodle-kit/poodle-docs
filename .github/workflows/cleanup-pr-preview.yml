@@ -1,0 +1,54 @@
+name: Cleanup PR Preview
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Cleanup preview deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: dreampaste.com
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            export PR_NUMBER=${{ github.event.pull_request.number }}
+            export CONTAINER_NAME="poodle-docs-pr-${PR_NUMBER}"
+
+            echo "Cleaning up PR #${PR_NUMBER} preview..."
+
+            # 컨테이너 중지 및 제거
+            docker stop $CONTAINER_NAME 2>/dev/null || true
+            docker rm $CONTAINER_NAME 2>/dev/null || true
+
+            # Caddy 설정 제거
+            sudo /usr/local/bin/cleanup-poodle-pr.sh $PR_NUMBER
+
+            # Docker 이미지 정리 (선택사항 - 디스크 공간 절약)
+            docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-$PR_NUMBER 2>/dev/null || true
+
+            echo "✅ PR #${PR_NUMBER} preview cleaned up successfully"
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: "## 🧹 Preview Cleanup\n\nPreview deployment for PR #" + prNumber + " has been cleaned up.\n\nContainer and resources have been removed from the server."
+            });
