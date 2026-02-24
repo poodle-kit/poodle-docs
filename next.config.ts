@@ -4,6 +4,7 @@ import nextra from "nextra";
 const withNextra = nextra({});
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   turbopack: {
     resolveAlias: {
       'next-mdx-import-source-file': './mdx-components.tsx'
