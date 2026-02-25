@@ -50,10 +50,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Deployment complete (Watchtower will auto-update)
+      - name: Deploy via webhook
         run: |
-          echo "✅ Docker image pushed to registry"
-          echo "🤖 Watchtower will automatically detect and deploy the new version"
-          echo "🌐 Production URL: https://poodle-kit.my"
-          echo ""
-          echo "Note: Deployment may take 1-2 minutes for Watchtower to detect and apply"
+          curl -f -X POST https://webhook.poodle-kit.my/webhook/deploy-branch \
+            -H "Content-Type: application/json" \
+            -d "{\"secret\": \"${{ secrets.WEBHOOK_SECRET }}\", \"branch\": \"main\"}"
+          echo "✅ Production deployed to https://poodle-kit.my"
