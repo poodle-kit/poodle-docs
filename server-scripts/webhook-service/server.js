@@ -15,6 +15,32 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'poodle-docs-webhook' });
 });
 
+// Branch deployment webhook (dev → dev.poodle-kit.my, main → poodle-kit.my)
+app.post('/webhook/deploy-branch', async (req, res) => {
+  try {
+    const { secret, branch } = req.body;
+
+    if (secret !== WEBHOOK_SECRET) {
+      return res.status(401).json({ error: 'Invalid secret' });
+    }
+
+    console.log(`[${new Date().toISOString()}] Deploy branch webhook:`, { branch });
+
+    if (branch === 'dev') {
+      await deployBranch('dev', 'ghcr.io/poodle-kit/poodle-docs:dev', 'poodle-docs-dev', 'dev.poodle-kit.my');
+      res.json({ success: true, message: 'dev deployed successfully', url: 'https://dev.poodle-kit.my' });
+    } else if (branch === 'main') {
+      await deployBranch('main', 'ghcr.io/poodle-kit/poodle-docs:latest', 'poodle-docs', 'poodle-kit.my');
+      res.json({ success: true, message: 'production deployed successfully', url: 'https://poodle-kit.my' });
+    } else {
+      res.status(400).json({ error: 'Invalid branch. Use "dev" or "main".' });
+    }
+  } catch (error) {
+    console.error('Deploy branch error:', error);
+    res.status(500).json({ error: 'Deployment failed', message: error.message });
+  }
+});
+
 // PR Preview 배포 webhook
 app.post('/webhook/pr-preview', async (req, res) => {
   try {
@@ -51,6 +77,33 @@ app.post('/webhook/pr-preview', async (req, res) => {
     });
   }
 });
+
+async function deployBranch(branch, image, containerName, domain) {
+  console.log(`Deploying branch ${branch} → ${domain}...`);
+
+  // 최신 이미지 pull
+  await execAsync(`docker pull ${image}`);
+
+  // 기존 컨테이너 중지 및 제거
+  try {
+    await execAsync(`docker stop ${containerName}`);
+    await execAsync(`docker rm ${containerName}`);
+  } catch (e) {
+    // 컨테이너가 없으면 무시
+  }
+
+  // soso_net에 연결하여 실행 (Caddy가 컨테이너명으로 프록시 가능)
+  const runCmd = `docker run -d \
+    --name ${containerName} \
+    --network soso_net \
+    --restart unless-stopped \
+    --label com.centurylinklabs.watchtower.enable=false \
+    -e NODE_ENV=production \
+    ${image}`;
+
+  await execAsync(runCmd);
+  console.log(`✅ Branch ${branch} deployed to https://${domain}`);
+}
 
 async function deployPRPreview(prNumber, imageTag) {
   const containerName = `poodle-docs-pr-${prNumber}`;
